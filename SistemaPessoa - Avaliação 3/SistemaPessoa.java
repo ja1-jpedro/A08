@@ -4,10 +4,13 @@ import javax.swing.*;
 
 public class SistemaPessoa extends JFrame {
 
+    private CardLayout cardLayout; // Para alternar entre os painéis
+    private JPanel mainPanel; // Painel principal para o CardLayout
+
     public SistemaPessoa() {
         // Configurações da Janela Principal
         setTitle("Sistema de Pessoa");
-        setSize(600, 300);
+        setSize(600, 400); // Aumenta o tamanho para acomodar os novos campos
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centraliza a janela na tela
 
@@ -20,6 +23,10 @@ public class SistemaPessoa extends JFrame {
         JMenuItem pessoasMenuItem = new JMenuItem("Pessoas");
         cadastroMenu.add(usuariosMenuItem);
         cadastroMenu.add(pessoasMenuItem);
+
+        // Ação dos Itens do Menu
+        usuariosMenuItem.addActionListener(e -> showCadastroUsuario());
+        pessoasMenuItem.addActionListener(e -> showCadastroPessoa());
 
         // Menu "Visualização"
         JMenu visualizacaoMenu = new JMenu("Visualização");
@@ -42,33 +49,143 @@ public class SistemaPessoa extends JFrame {
         // Adiciona a barra de menu na janela principal
         setJMenuBar(menuBar);
 
-        // Layout principal
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        // Layout principal com CardLayout
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
 
-        // Painel de Cadastro
-        JPanel cadastroPanel = new JPanel(new GridLayout(5, 2, 10, 10));
-        cadastroPanel.setBorder(BorderFactory.createTitledBorder("Cadastro de Usuários"));
+        mainPanel.add(createCadastroUsuarioPanel(), "Usuarios");
+        mainPanel.add(createCadastroPessoaPanel(), "Pessoas");
+
+        // Adiciona o painel principal à janela
+        add(mainPanel, BorderLayout.CENTER); // Painel central
+
+        // Rodapé
+        add(createFooter(), BorderLayout.SOUTH);
+    }
+
+    private JPanel createCadastroUsuarioPanel() {
+        // Painel de Cadastro de Usuários
+        JPanel cadastroPanel = new JPanel();
+        cadastroPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Espaçamento
 
         // Campos de texto para o formulário de Cadastro
-        cadastroPanel.add(new JLabel("Usuário:"));
-        JTextField usuarioField = new JTextField();
-        cadastroPanel.add(usuarioField);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        cadastroPanel.add(new JLabel("Usuário:"), gbc);
+        gbc.gridx = 1;
+        JTextField usuarioField = new JTextField(15);
+        cadastroPanel.add(usuarioField, gbc);
 
-        cadastroPanel.add(new JLabel("Senha:"));
-        JPasswordField senhaField = new JPasswordField();
-        cadastroPanel.add(senhaField);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        cadastroPanel.add(new JLabel("Senha:"), gbc);
+        gbc.gridx = 1;
+        JPasswordField senhaField = new JPasswordField(15);
+        cadastroPanel.add(senhaField, gbc);
 
-        cadastroPanel.add(new JLabel("Email:"));
-        JTextField emailField = new JTextField();
-        cadastroPanel.add(emailField);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        cadastroPanel.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1;
+        JTextField emailField = new JTextField(15);
+        cadastroPanel.add(emailField, gbc);
 
-        cadastroPanel.add(new JLabel("Ativo:"));
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        cadastroPanel.add(new JLabel("Ativo:"), gbc);
+        gbc.gridx = 1;
         JRadioButton ativoButton = new JRadioButton();
-        cadastroPanel.add(ativoButton);
+        cadastroPanel.add(ativoButton, gbc);
 
-        // Adicionando o Painel de Cadastro ao painel principal
-        mainPanel.add(cadastroPanel, BorderLayout.NORTH); // Coloca no centro da janela
+        // Adicionando o painel de cadastro ao painel principal
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2; // Ocupa duas colunas
+        gbc.anchor = GridBagConstraints.EAST; // Alinha à direita
+        cadastroPanel.add(createButtonsPanel("usuario"), gbc); // Painel de botões
 
+        return cadastroPanel;
+    }
+
+    private JPanel createCadastroPessoaPanel() {
+        // Painel de Cadastro de Pessoas
+        JPanel cadastroPanel = new JPanel();
+        cadastroPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Espaçamento
+
+        // Campos de texto para o formulário de Cadastro
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        cadastroPanel.add(new JLabel("Nome:"), gbc);
+        gbc.gridx = 1;
+        JTextField nomeField = new JTextField(15);
+        cadastroPanel.add(nomeField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        cadastroPanel.add(new JLabel("Endereço:"), gbc);
+        gbc.gridx = 1;
+        JTextField enderecoField = new JTextField(15);
+        cadastroPanel.add(enderecoField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        cadastroPanel.add(new JLabel("Cidade:"), gbc);
+        gbc.gridx = 1;
+        JTextField cidadeField = new JTextField(15);
+        cadastroPanel.add(cidadeField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        cadastroPanel.add(new JLabel("UF:"), gbc);
+        gbc.gridx = 1;
+        
+        JTextField ufField = new JTextField(2);
+        cadastroPanel.add(ufField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        cadastroPanel.add(new JLabel("Gmail:"), gbc);
+        gbc.gridx = 1;
+        JTextField gmailField = new JTextField(15);
+        cadastroPanel.add(gmailField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        cadastroPanel.add(new JLabel("Telefone:"), gbc);
+        gbc.gridx = 1;
+        JTextField telefoneField = new JTextField(15);
+        cadastroPanel.add(telefoneField, gbc);
+
+        // Seleção de Gênero
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        cadastroPanel.add(new JLabel("Gênero:"), gbc);
+        gbc.gridx = 1;
+        JPanel generoPanel = new JPanel();
+        JRadioButton masculinoButton = new JRadioButton("Masculino");
+        JRadioButton femininoButton = new JRadioButton("Feminino");
+        ButtonGroup generoGroup = new ButtonGroup();
+        generoGroup.add(masculinoButton);
+        generoGroup.add(femininoButton);
+        generoPanel.add(masculinoButton);
+        generoPanel.add(femininoButton);
+        cadastroPanel.add(generoPanel, gbc);
+
+        // Adicionando o painel de cadastro ao painel principal
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 2; // Ocupa duas colunas
+        gbc.anchor = GridBagConstraints.EAST; // Alinha à direita
+        cadastroPanel.add(createButtonsPanel("pessoa"), gbc); // Painel de botões
+
+        return cadastroPanel;
+    }
+
+    private JPanel createButtonsPanel(String tipo) {
         // Painel de Botões
         JPanel botoesPanel = new JPanel();
         botoesPanel.setLayout(new BoxLayout(botoesPanel, BoxLayout.LINE_AXIS)); // Usa BoxLayout na horizontal
@@ -93,26 +210,37 @@ public class SistemaPessoa extends JFrame {
         botoesPanel.add(sairButton);
 
         // Ações dos Botões
-        incluirButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Incluir clicado!"));
-        alterarButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Alterar clicado!"));
-        excluirButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Excluir clicado!"));
-        consultarButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Consultar clicado!"));
-        cancelarButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Cancelar clicado!"));
+        incluirButton
+                .addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Incluir " + tipo + " clicado!"));
+        alterarButton
+                .addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Alterar " + tipo + " clicado!"));
+        excluirButton
+                .addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Excluir " + tipo + " clicado!"));
+        consultarButton
+                .addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Consultar " + tipo + " clicado!"));
+        cancelarButton
+                .addActionListener(e -> JOptionPane.showMessageDialog(this, "Botão Cancelar " + tipo + " clicado!"));
         sairButton.addActionListener(e -> System.exit(0));
 
-        // Adicionando o painel de botões ao painel principal
-        mainPanel.add(botoesPanel, BorderLayout.EAST); // Na parte inferior, logo acima do rodapé
+        return botoesPanel; // Retorna o painel de botões
+    }
 
+    private JPanel createFooter() {
         // Rodapé
         JPanel rodapePanel = new JPanel(new BorderLayout());
         JLabel rodape = new JLabel("Versão: 12.1.2024    Usuário: denys.silva    Data de acesso: 20/09/2024 10:58",
                 JLabel.CENTER);
         rodapePanel.add(rodape, BorderLayout.CENTER);
 
-        mainPanel.add(rodapePanel, BorderLayout.PAGE_END); // Rodapé na parte final
+        return rodapePanel; // Retorna o rodapé
+    }
 
-        // Adiciona o painel principal à janela
-        add(mainPanel);
+    private void showCadastroUsuario() {
+        cardLayout.show(mainPanel, "Usuarios");
+    }
+
+    private void showCadastroPessoa() {
+        cardLayout.show(mainPanel, "Pessoas");
     }
 
     public static void main(String[] args) {
