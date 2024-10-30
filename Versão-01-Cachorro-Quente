@@ -1,6 +1,4 @@
-/* versão 1 cachorro quente
-    
-    import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LojaCachorroQuente {
